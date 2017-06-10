@@ -60,6 +60,7 @@ class SqlReader:
         """
         at_expression = r'ALTER TABLE[\s]*`([\S]*)`[\s]*(.*)[=\s\w\d]*;'
         pk_expression = r'ADD PRIMARY KEY \(`([\S]*)`\)'
+        pk_sub_expression = r'([\S]*?)(`,`|$)'
         fk_expression = r'ADD CONSTRAINT `[\S]*`[\s]*FOREIGN KEY \(`([\S]*)`\)'
         at_results = re.finditer(at_expression, file)
         for at_result in at_results:
@@ -68,9 +69,12 @@ class SqlReader:
 
             # primary keys
             pk_results = re.finditer(pk_expression, at_result.group(2))
-            for pk in pk_results:
-                primary_key = pk.group(1)
-                print('  primary key : ' + primary_key)
+            for pk_result in pk_results:
+                p_keys = re.finditer(pk_sub_expression, pk_result.group(1))
+                for p_key in p_keys:
+                    if p_key.group(1):
+                        primary_key = p_key.group(1)
+                        print('  primary key : ' + primary_key)
 
             # foreign keys
             fk_results = re.finditer(fk_expression, at_result.group(2))
