@@ -1,4 +1,8 @@
 class Attribute:
+    """
+    Attribute class
+    Information for each table attributes of a database graph
+    """
 
     def __init__(self, name, var_type, is_pk, is_fk):
         self.name = name

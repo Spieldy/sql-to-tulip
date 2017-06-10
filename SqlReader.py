@@ -2,6 +2,10 @@ import re
 
 
 class SqlReader:
+    """
+    SqlReader class
+    Read a SQL database creation file and create a corresponding graph
+    """
     path = ''
     graph = []
 
@@ -11,6 +15,7 @@ class SqlReader:
     def compute_diagram(self):
         """
         Read the SQL class and create the corresponding entities-diagram graph
+        :return: The database graph
         """
         with open(self.path, 'r') as my_file:
             file = my_file.read().replace('\n', '')
@@ -91,7 +96,7 @@ class SqlReader:
         """
         at_expression = r'ALTER TABLE[\s]*`([\S]*)`[\s]*(.*)[=\s\w\d]*;'
         args_expression = \
-            r'ADD CONSTRAINT `[\S]*`[\s]*FOREIGN KEY \(`([\S]*)`\)[\s]*REFERENCES[\s]*([\S]*)[\s]*\(`([\S]*)`\)'
+            r'ADD CONSTRAINT `[\S]*`[\s]*FOREIGN KEY \(`([\S]*)`\)[\s]*REFERENCES[\s]*`([\S]*)`[\s]*\(`([\S]*)`\)'
         at_results = re.finditer(at_expression, file)
         for at_result in at_results:
             table_1_name = at_result.group(1)
