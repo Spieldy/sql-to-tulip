@@ -1,10 +1,10 @@
 from SqlReader import *
+from tulip import *
 
 
-def main():
-    path = './exemple_sql.sql'
-    sql_r = SqlReader(path)
-    sql_r.compute_diagram()
-
-if __name__ == '__main__':
-    main()
+def main(graph):
+    path = 'C:\Users\Pierre-Louis\Documents\UQAC\Cours\Visualisation\sql-to-tulip\exemple_sql.sql'
+    sql_r = SqlReader(path, graph)
+    
+    for n in graph.getNodes():
+        print n
