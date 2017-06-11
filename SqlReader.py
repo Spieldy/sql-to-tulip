@@ -1,4 +1,5 @@
 import re
+from tulip import *
 
 
 class SqlReader:
@@ -7,10 +8,11 @@ class SqlReader:
     Read a SQL database creation file and create a corresponding graph
     """
     path = ''
-    graph = []
 
-    def __init__(self, path):
+    def __init__(self, path, graph):
         self.path = path
+        self.graph = graph
+        self.compute_diagram()
 
     def compute_diagram(self):
         """
@@ -18,11 +20,11 @@ class SqlReader:
         :return: The database graph
         """
         with open(self.path, 'r') as my_file:
-            file = my_file.read().replace('\n', '')
+            file = my_file.read().replace('\n', ' ')
         file = self.indent_file(file)
-        # self.create_nodes(file)
+        self.create_nodes(file)
         self.add_keys(file)
-        # self.create_edges(file)
+        self.create_edges(file)
         # todo call to other functions
         my_file.close()
 
@@ -48,14 +50,22 @@ class SqlReader:
         args_expression = r'(`([\S]*)`[\s]*([\S]*)[\s\w]*)[,]*'
         ct_results = re.finditer(ct_expression, file)
         for ct_result in ct_results:
+            names = []
+            types = []
             table_name = ct_result.group(1)
-            print(table_name)
+            # todo comprendre pourquoi la condition suivante est necessaire
+            node = self.get_node_by_attribute_value('table_name', table_name)
+            if not node:
+                node = self.graph.addNode()
+            self.graph['table_name'][node] = table_name
             args_results = re.finditer(args_expression, ct_result.group(2))
             for arg in args_results:
                 column_id = arg.group(2)
+                names.append(column_id)
                 column_type = arg.group(3)
-                print('   ' + column_id + ': ' + column_type)
-        # todo creer les Node correspondants
+                types.append(column_type)
+            self.graph['a_name'][node] = names
+            self.graph['a_type'][node] = types
 
     def add_keys(self, file):
         """
@@ -70,7 +80,17 @@ class SqlReader:
         at_results = re.finditer(at_expression, file)
         for at_result in at_results:
             table_name = at_result.group(1)
-            print('table : ' + table_name)
+            node = self.get_node_by_attribute_value('table_name', table_name)
+            number_of_attributes = len(self.graph['a_name'][node])
+            if self.graph['a_ispk'][node]:
+                pk_list = self.graph['a_ispk'][node]
+            else:
+                pk_list = [False] * number_of_attributes
+                
+            if self.graph['a_isfk'][node]:
+                fk_list = self.graph['a_isfk'][node]
+            else:
+                fk_list = [False] * number_of_attributes
 
             # primary keys
             pk_results = re.finditer(pk_expression, at_result.group(2))
@@ -79,14 +99,17 @@ class SqlReader:
                 for p_key in p_keys:
                     if p_key.group(1):
                         primary_key = p_key.group(1)
-                        print('  primary key : ' + primary_key)
+                        pk_pos = self.get_position_by_node_attribute_value(node, 'a_name', primary_key)
+                        pk_list[pk_pos] = True
+            self.graph['a_ispk'][node] = pk_list
 
             # foreign keys
             fk_results = re.finditer(fk_expression, at_result.group(2))
             for fk in fk_results:
                 foreign_key = fk.group(1)
-                print('  foreign key : ' + foreign_key)
-        # todo ajouter les infos aux Nodes correspondants
+                fk_pos = self.get_position_by_node_attribute_value(node, 'a_name', foreign_key)
+                fk_list[fk_pos] = True
+            self.graph['a_isfk'][node] = fk_list
 
     def create_edges(self, file):
         """
@@ -100,13 +123,26 @@ class SqlReader:
         at_results = re.finditer(at_expression, file)
         for at_result in at_results:
             table_1_name = at_result.group(1)
+            node1 = self.get_node_by_attribute_value('table_name', table_1_name)
             args_results = re.finditer(args_expression, at_result.group(2))
             for arg in args_results:
-                print('table 1 : ' + table_1_name)
-                table_1_key = arg.group(1)
-                print('    key 1 : ' + table_1_key)
+                # table_1_key = arg.group(1)
                 table_2_name = arg.group(2)
-                print('  table 2 : ' + table_2_name)
-                table_2_key = arg.group(3)
-                print('    key 2 : ' + table_2_key)
-        # todo creer les Edges correspondants
+                node2 = self.get_node_by_attribute_value('table_name', table_2_name)
+                # table_2_key = arg.group(3)
+                self.graph.addEdge(node1, node2)
+
+    def get_node_by_attribute_value(self, attribute, value):
+        for node in self.graph.getNodes():
+            if self.graph[attribute][node] == value:
+                return node
+        return False
+
+    def get_position_by_node_attribute_value(self, node, attribute, value):
+        list = self.graph[attribute][node]
+        i = 0
+        for element in list:
+            if element == value:
+                return i
+            i = i + 1
+        return False
