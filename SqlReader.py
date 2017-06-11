@@ -22,6 +22,7 @@ class SqlReader:
         with open(self.path, 'r') as my_file:
             file = my_file.read().replace('\n', ' ')
         file = self.indent_file(file)
+        self.delete_nodes(file)
         self.create_nodes(file)
         self.add_keys(file)
         self.create_edges(file)
@@ -40,6 +41,20 @@ class SqlReader:
             .replace('ALTER TABLE', '\nALTER TABLE')\
             .replace('DROP TABLE', '\nDROP TABLE')
 
+    def delete_nodes(self, file):
+        """
+        Delete the nodes corresponding to SQL tables
+        Based on 'DROP TABLE' sentences
+        :param file: The SQL file
+        """
+        dt_expression = r'DROP TABLE IF EXISTS[\s]*`([\S]*)`[\s]*;'
+        dt_results = re.finditer(dt_expression, file)
+        for dt_result in dt_results:
+            table_name = dt_result.group(1)
+            node = self.get_node_by_attribute_value('table_name', table_name)
+            if node:
+                self.graph.delNode(node)
+
     def create_nodes(self, file):
         """
         Create the nodes corresponding to SQL tables
@@ -53,19 +68,18 @@ class SqlReader:
             names = []
             types = []
             table_name = ct_result.group(1)
-            # todo comprendre pourquoi la condition suivante est necessaire
             node = self.get_node_by_attribute_value('table_name', table_name)
             if not node:
                 node = self.graph.addNode()
-            self.graph['table_name'][node] = table_name
-            args_results = re.finditer(args_expression, ct_result.group(2))
-            for arg in args_results:
-                column_id = arg.group(2)
-                names.append(column_id)
-                column_type = arg.group(3)
-                types.append(column_type)
-            self.graph['a_name'][node] = names
-            self.graph['a_type'][node] = types
+                self.graph['table_name'][node] = table_name
+                args_results = re.finditer(args_expression, ct_result.group(2))
+                for arg in args_results:
+                    column_id = arg.group(2)
+                    names.append(column_id)
+                    column_type = arg.group(3)
+                    types.append(column_type)
+                self.graph['a_name'][node] = names
+                self.graph['a_type'][node] = types
 
     def add_keys(self, file):
         """
@@ -139,10 +153,10 @@ class SqlReader:
         return False
 
     def get_position_by_node_attribute_value(self, node, attribute, value):
-        list = self.graph[attribute][node]
+        attribute_list = self.graph[attribute][node]
         i = 0
-        for element in list:
+        for element in attribute_list:
             if element == value:
                 return i
-            i = i + 1
+            i += 1
         return False
