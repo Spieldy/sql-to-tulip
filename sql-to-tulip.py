@@ -1,26 +1,18 @@
 from SqlReader import *
 from TableView import *
+from GraphView import *
 from tulip import *
 
 
 def main(graph):
-    reinit(graph)
+    clean(graph)
     path = 'C:/Users/Theo/PycharmProjects/sql-to-tulip/exemples_sql/tetrum.sql'
-    sql_r = SqlReader(path, graph)
-    
-    for n in graph.getNodes():
-        t = Table(n, graph)
-        t.compute_size()
-
-    graph.applyLayoutAlgorithm('Planarization Layout (OGDF)')
-
-    for n in graph.getNodes():
-        t = Table(n, graph)
-        t.compute_size()
-        t.display()
+    SqlReader(path, graph)
+    g = GraphView(graph)
+    g.set_view()
 
 
-def reinit(graph):
+def clean(graph):
     for e in graph.getEdges():
         graph.delEdge(e)
     for n in graph.getNodes():

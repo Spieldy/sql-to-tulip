@@ -1,6 +1,6 @@
 from tulip import *
 
-class Table(object):
+class TableView(object):
 
     def __init__(self, node, graph):
         self.width = 0
@@ -75,6 +75,8 @@ class Table(object):
         else:
           self.graph['viewLabelBorderWidth'][a_node] = 0
           self.graph['viewSize'][a_node] = tlp.Size(1,0,1)
+          self.graph['viewLayout'][a_node] = self.graph['viewLayout'][a_node] + tlp.Vec3f(0, 0, -10)
+          self.graph['viewColor'][a_node] = tlp.Color(224, 228, 204)
         
     def create_types(self):
       max_name_size = 0
@@ -95,8 +97,4 @@ class Table(object):
           self.graph['viewLabelBorderColor'][a_node] = tlp.Color.Gray
         else:
           self.graph['viewLabelBorderWidth'][a_node] = 0
-        
-def main(graph): 
-  for n in graph.getNodes():
-    t = Table(n, graph)
-    t.display()
+ 
