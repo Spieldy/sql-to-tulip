@@ -23,7 +23,7 @@ class SqlReader:
         with open(self.path, 'r') as my_file:
             file = my_file.read().replace('\n', ' ')
         file = self.indent_file(file)
-        self.delete_nodes(file)
+        # self.delete_nodes(file)
         self.create_nodes(file)
         self.add_keys(file)
         self.create_edges(file)
@@ -97,15 +97,8 @@ class SqlReader:
             table_name = at_result.group(1)
             node = get_node_by_attribute_value(self.graph, 'table_name', table_name)
             number_of_attributes = len(self.graph['a_name'][node])
-            if self.graph['a_ispk'][node]:
-                pk_list = self.graph['a_ispk'][node]
-            else:
-                pk_list = [False] * number_of_attributes
-                
-            if self.graph['a_isfk'][node]:
-                fk_list = self.graph['a_isfk'][node]
-            else:
-                fk_list = [False] * number_of_attributes
+            pk_list = [False] * number_of_attributes
+            fk_list = [False] * number_of_attributes
 
             # primary keys
             pk_results = re.finditer(pk_expression, at_result.group(2))
