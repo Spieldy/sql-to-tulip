@@ -34,8 +34,9 @@ Each created node have the following properties:
 
 ## Performance test
 
-## Visulization
-![Entity representation](vizualization.png)
+## Visualization
+The following picture shows you how the entity are represented in the tulip project.
+![Entity example](vizualization.png)
 
 ## Problems/TODOs
 * In *SqlReader.create_node()*, we do not manage the DROP TABLE instruction in SQL, so it is a `if <an entity doesn't already exist> then <create it>
