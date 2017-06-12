@@ -1,4 +1,5 @@
 from SqlReader import *
+from Table import *
 from tulip import *
 
 
@@ -8,7 +9,15 @@ def main(graph):
     sql_r = SqlReader(path, graph)
     
     for n in graph.getNodes():
-        print(n)
+        t = Table(n, graph)
+        t.compute_size()
+
+    graph.applyLayoutAlgorithm('Planarization Layout (OGDF)')
+
+    for n in graph.getNodes():
+        t = Table(n, graph)
+        t.compute_size()
+        t.display()
 
 
 def reinit(graph):
