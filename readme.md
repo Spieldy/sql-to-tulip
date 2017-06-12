@@ -35,7 +35,7 @@ Each created node have the following properties:
 ## Performance test
 
 ## Visulization
-![Entity representation](vizualisation.png)
+![Entity representation](vizualization.png)
 
 ## Problems/TODOs
-* In *SqlReader.create_node()*, we do not manage the DROP TABLE instruction in SQL, so it is a `if <an entity doesn't already exist> then <create it>`
+* In *SqlReader.create_node()*, we do not manage the DROP TABLE instruction in SQL, so it is a `if <an entity doesn't already exist> then <create it>
