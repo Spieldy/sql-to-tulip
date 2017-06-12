@@ -61,7 +61,7 @@ class SqlReader:
         Based on 'CREATE TABLE' sentences
         :param file: The SQL file
         """
-        ct_expression = r'CREATE TABLE[\s]*`([\S]*)`[\s]*\((.*)\)[=\s\w\d]*;'
+        ct_expression = r'CREATE TABLE[\s\S]*?`([\S]*)`[\s]*\((.*)\)[=\s\w\d]*;'
         args_expression = r'(`([\S]*)`[\s]*([\S]*)[\s\w]*)[,]*'
         ct_results = re.finditer(ct_expression, file)
         for ct_result in ct_results:
