@@ -15,13 +15,13 @@ class SQLImport(tlp.ImportModule):
 
   def importGraph(self):
     filename = self.dataSet["file::SQL script"];
-    print filename
     
     name = ntpath.basename(filename)
     self.graph.setName(name)
-    #SqlReader(filename, self.graph)
-    #g = GraphView(self.graph)
-    #g.set_view()    
+    sql_reader = SqlReader(filename, self.graph)
+    sql_reader.compute_diagram()
+    g = GraphView(self.graph)
+    g.set_view()    
  
     return True
 

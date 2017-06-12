@@ -13,7 +13,6 @@ class SqlReader:
     def __init__(self, path, graph):
         self.path = path
         self.graph = graph
-        self.compute_diagram()
 
     def compute_diagram(self):
         """
@@ -23,7 +22,7 @@ class SqlReader:
         with open(self.path, 'r') as my_file:
             file = my_file.read().replace('\n', ' ')
         file = self.indent_file(file)
-        # self.delete_nodes(file)
+        self.delete_nodes(file)
         self.create_nodes(file)
         self.add_keys(file)
         self.create_edges(file)
