@@ -14,6 +14,7 @@ class TableView(object):
         self.a_isfk = graph["a_isfk"][node]
         self.position = graph["viewLayout"][node]
         graph['viewColor'][node] = tlp.Color(224, 228, 204)
+        graph['viewShape'][node] = tlp.NodeShape.Square
 
         self.width_per_character = 0.85
         self.h_offset = 0
@@ -53,6 +54,7 @@ class TableView(object):
         self.graph['viewColor'][title_node] = tlp.Color(167, 219, 219)
         self.graph['viewFontSize'][title_node] = 38
         self.graph['viewFont'][title_node] = 'FreeMono bold'
+        self.graph['viewShape'][title_node] = tlp.NodeShape.Square
         
     def create_attribute_names(self):
       for i in range(len(self.a_names)):
