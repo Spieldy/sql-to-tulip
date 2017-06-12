@@ -37,7 +37,7 @@ Each created node have the following properties:
 ## Visualization
 The following picture shows you how the entity are represented in the tulip project.
 
-<img src="vizualization.png" alt="Entity example" style="width: 150px;"/>
+<img src="vizualization.png" alt="Entity example" style="width: 75px;"/>
 
 
 ## Problems/TODOs
