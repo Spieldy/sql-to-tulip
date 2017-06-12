@@ -1,11 +1,11 @@
 from SqlReader import *
-from Table import *
+from TableView import *
 from tulip import *
 
 
 def main(graph):
     reinit(graph)
-    path = 'C:/Users/Pierre-Louis/Documents/UQAC/Cours/Visualisation/sql-to-tulip/exemples_sql/correctx.sql'
+    path = 'C:/Users/Theo/PycharmProjects/sql-to-tulip/exemples_sql/tetrum.sql'
     sql_r = SqlReader(path, graph)
     
     for n in graph.getNodes():

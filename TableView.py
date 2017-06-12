@@ -15,7 +15,7 @@ class Table(object):
         self.position = graph["viewLayout"][node]
         graph['viewColor'][node] = tlp.Color(224, 228, 204)
 
-        self.width_per_character = 1
+        self.width_per_character = 0.85
         self.h_offset = 0
         self.height_per_line = 2
         self.v_offset = 3
@@ -36,7 +36,7 @@ class Table(object):
           length = len(self.a_types[i])
           if length > max_type:
             max_type = length
-        max_length = max(max_name + max_type, len(self.name) * 1.2)
+        max_length = max(max_name + max_type, len(self.name) * 1.4)
         self.width = max_length * self.width_per_character + self.h_offset
 
         # height
