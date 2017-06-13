@@ -15,7 +15,6 @@ class SQLImport(tlp.ImportModule):
 
   def importGraph(self):
     filename = self.dataSet["file::SQL script"];
-    
     name = ntpath.basename(filename)
     self.graph.setName(name)
     sql_reader = SqlReader(filename, self.graph)

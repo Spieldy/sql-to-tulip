@@ -53,7 +53,6 @@ class TableView(object):
         self.graph['viewSize'][title_node] = tlp.Size(self.width, self.height_per_line * 2,1)
         self.graph['viewColor'][title_node] = tlp.Color(167, 219, 219)
         self.graph['viewFontSize'][title_node] = 38
-        self.graph['viewFont'][title_node] = 'FreeMono bold'
         self.graph['viewShape'][title_node] = tlp.NodeShape.Square
         
     def create_attribute_names(self):

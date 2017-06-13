@@ -87,6 +87,11 @@ class SqlReader:
         Based on 'ALTER TABLE' sentences
         :param file: The SQL file
         """
+        for n in self.graph.getNodes():
+            number_of_attributes = len(self.graph['a_name'][n])
+            self.graph['a_ispk'][n] = [False] * number_of_attributes
+            self.graph['a_isfk'][n] = [False] * number_of_attributes
+
         at_expression = r'ALTER TABLE[\s]*`([\S]*)`[\s]*(.*)[=\s\w\d]*;'
         pk_expression = r'ADD PRIMARY KEY \(`([\S]*)`\)'
         pk_sub_expression = r'([\S]*?)(`,`|$)'
@@ -95,9 +100,9 @@ class SqlReader:
         for at_result in at_results:
             table_name = at_result.group(1)
             node = get_node_by_attribute_value(self.graph, 'table_name', table_name)
-            number_of_attributes = len(self.graph['a_name'][node])
-            pk_list = [False] * number_of_attributes
-            fk_list = [False] * number_of_attributes
+
+            pk_list = self.graph['a_ispk'][node]
+            fk_list = self.graph['a_isfk'][node]
 
             # primary keys
             pk_results = re.finditer(pk_expression, at_result.group(2))
