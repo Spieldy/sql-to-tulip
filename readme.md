@@ -5,12 +5,16 @@
 ## Installation
 For using **sql-to-tulip**, you have to download the software Tulip available [here](https://sourceforge.net/projects/auber/files/) (for developers, note that you have to install a version supporting the python development).
 
-### Users
+* Clone the git repository
+* Go in *Develop* panel in tulip interface
+* Load the file sql\_to\_tulip_plugin.py in the plugin editor
+* Click on Register plugin
 
+Now the plugin is usable in the import panel with name *Import SQL*
 
-### Developers
-* Clone the git repository and open it with Tulip
-* Launch the file sql-to-tulip.py 
+To improve the display of your database:
+* In *Node Link View*, open the *Scene* panel on the right
+* Check *use fix font size* in the label group and uncheck *enable size interpretation* in the edge group
 
 The way how the plugin works is detailed in the *Behavior* section, and the class used are described in the *Structure* section.
 
