@@ -23,7 +23,8 @@ The plugin **sql-to-tulip** follows the steps:
 	5. Reduce the initial node to a unique size so the the edges have all the same larger.
 
 ## Structure
-The *SqlReader* class contain the code allowing to extract the name of the table, the attributes and their information from the SQL script. This classe uses regex to extract by keywords.
+### SqlReader
+The *SqlReader* class contains the code allowing to extract the name of the table, the attributes and their information from the SQL script. This classe uses regex to extract by keywords.
 The result returns a structure graph, where each node represents an entity, and each edge a relation.
 Each created node have the following properties:
 * `table_name`(*string*) : name of the entity
@@ -32,13 +33,19 @@ Each created node have the following properties:
 * `a_ispk`(*boolean[]*)  : list of boolean saying if an attribute is a primary key
 * `a_isfk`(*boolean[]*)  : list of boolean saying if an attribute is a foreign key
 
-## Performance test
+### TableView
+The *TableView* class is used to create each table from a node. It creates a visual node for the name and of each attributes. The `compute_size()` function calculates the size of the visual table, based upon the total length of name and attributes strings.
+
+### GraphView
+The *GraphView* class sets up the entity-diagram, using the `set_view()` function. This function calls the `TableView.compute_size()` function for each nodes, then set the edges settings, apply a planarization layout algorithm, and finally displays the tables.
+The planarization layout algorithm is already countained into Tulip, and calls the [OGDF](http://www.ogdf.net) implementation.
 
 ## Visualization
 The following picture shows you how the entity are represented in the tulip project.
 
 <img src="vizualization.png" alt="Entity example" style="width: 75px;"/>
 
+## Performance test
 
 ## Problems/TODOs
-* In *SqlReader.create_node()*, we do not manage the DROP TABLE instruction in SQL, so it is a `if <an entity doesn't already exist> then <create it>
+* In `SqlReader.add_keys()`, we only manage the instructions called into the *ALTER TABLE* instruction. So, if a primary key is defined into a *CREATE TABLE* instruction, it won't work properly.
